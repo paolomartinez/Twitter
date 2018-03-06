@@ -11,9 +11,11 @@ import Foundation
 class User {
     
     var name: String
+    var screenName: String?
+    var profileUrl: URL?
     
     init(dictionary: [String: Any]) {
         name = dictionary["name"] as! String
-
+        screenName = (dictionary["screen_name"] as? String)!
     }
 }

@@ -7,14 +7,30 @@
 //
 
 import UIKit
+import TTTAttributedLabel
 
 class TweetCell: UITableViewCell {
     
+    @IBOutlet var userIconImageView: UIImageView!
+    @IBOutlet var userNameLabel: TTTAttributedLabel!
+    @IBOutlet var userTitleLabel: TTTAttributedLabel!
+    
+    @IBOutlet var tweetTimeLabel: TTTAttributedLabel!
     @IBOutlet weak var tweetTextLabel: UILabel!
     
     var tweet: Tweet! {
         didSet {
             tweetTextLabel.text = tweet.text
+            tweetTimeLabel.setText(" · " + tweet.createdAtString)
+            
+            userTitleLabel.setText(tweet.user.name)
+            // MARK
+            // userNameLabel.setText("@" + tweet.user.)
+            
+            /*
+            authorNameLabel.text = tweet.user.name
+            twitterHandleLabel.text = "@" + tweet.user.screenName!
+            timeStampLabel.text = " · " + tweet.createdAtString */
         }
     }
     
