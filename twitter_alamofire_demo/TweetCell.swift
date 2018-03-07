@@ -8,6 +8,7 @@
 
 import UIKit
 import TTTAttributedLabel
+import AlamofireImage
 
 class TweetCell: UITableViewCell {
     
@@ -18,6 +19,15 @@ class TweetCell: UITableViewCell {
     @IBOutlet var tweetTimeLabel: TTTAttributedLabel!
     @IBOutlet weak var tweetTextLabel: UILabel!
     
+    @IBOutlet var repliesCountLabel: UILabel!
+    @IBOutlet var favoritesCountLabel: UILabel!
+    @IBOutlet var retweetsCountLabel: UILabel!
+    
+    @IBOutlet var favoriteButton: UIButton!
+    @IBOutlet var retweetButton: UIButton!
+    
+    
+    var imageString: String = ""
     var tweet: Tweet! {
         didSet {
             tweetTextLabel.text = tweet.text
@@ -25,11 +35,70 @@ class TweetCell: UITableViewCell {
             
             userTitleLabel.setText(tweet.user.name)
             userNameLabel.setText("@" + tweet.user.screenName!)
+
+            favoritesCountLabel.text = String(describing: tweet.favoriteCount)
             
-            /*
-            authorNameLabel.text = tweet.user.name
-            twitterHandleLabel.text = "@" + tweet.user.screenName!
-            timeStampLabel.text = " · " + tweet.createdAtString */
+            retweetsCountLabel.text = String(describing: tweet.retweetCount)
+            
+            imageString = tweet.user.profileImageUrl!
+            let imageURL = URL(string: self.imageString)!
+            userIconImageView.af_setImage(withURL: imageURL)
+        }
+    }
+    
+    @IBAction func didTapFavorite(_ sender: Any) {
+        if tweet.favorited == false {
+            tweet.favorited = true
+            print("trying to favorite tweet")
+            favoriteTweet()
+        } else {
+            tweet.favorited = false
+            print("trying to unfavorite tweet")
+            unfavoriteTweet()
+        }
+    }
+    
+    @IBAction func didTapRetweet(_ sender: Any) {
+        if tweet.retweeted == false {
+            tweet.retweeted = true
+            retweetTweet()
+        }
+    }
+    
+    func favoriteTweet() {
+        APIManager.shared.favorite(tweet) { (tweet: Tweet?, error: Error?) in
+            if let  error = error {
+                print("Error favoriting tweet: \(error.localizedDescription)")
+            } else if let tweet = tweet {
+                print("Successfully favorited the following Tweet: \n\(tweet.text)")
+                tweet.favoriteCount! += 1
+                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
+            }
+        }
+    }
+    
+    func retweetTweet() {
+        APIManager.shared.retweet(tweet) { (tweet: Tweet?, error: Error?) in
+            if let  error = error {
+                print("Error retweeting tweet: \(error.localizedDescription)")
+            } else if let tweet = tweet {
+                print("Successfully favorited the following Tweet: \n\(tweet.text)")
+                tweet.favoriteCount! += 1
+                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
+            }
+        }
+    }
+    
+    func unfavoriteTweet() {
+        APIManager.shared.unfavorite(tweet) { (tweet: Tweet?, error: Error?) in
+            if let error = error {
+                print("Error favoriting tweet: \(error.localizedDescription)")
+            } else if let tweet = tweet {
+                print("Successfully unfavorited the following Tweet: \n\(tweet.text)")
+                tweet.favorited = false
+                tweet.favoriteCount! -= 1
+                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon"), for: .normal)
+            }
         }
     }
     

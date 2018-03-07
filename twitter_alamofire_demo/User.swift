@@ -40,7 +40,7 @@ class User {
     
     var name: String
     var screenName: String?
-    var profileUrl: URL?
+    var profileImageUrl: String?
     var timeStamp: String
     
     init(dictionary: [String: Any]) {
@@ -48,5 +48,6 @@ class User {
         name = dictionary["name"] as! String
         screenName = (dictionary["screen_name"] as? String)!
         timeStamp = dictionary["created_at"] as! String
+        profileImageUrl = dictionary["profile_image_url_https"] as? String
     }
 }
