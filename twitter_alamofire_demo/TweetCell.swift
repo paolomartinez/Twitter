@@ -24,8 +24,7 @@ class TweetCell: UITableViewCell {
             tweetTimeLabel.setText(" · " + tweet.createdAtString)
             
             userTitleLabel.setText(tweet.user.name)
-            // MARK
-            // userNameLabel.setText("@" + tweet.user.)
+            userNameLabel.setText("@" + tweet.user.screenName!)
             
             /*
             authorNameLabel.text = tweet.user.name
