@@ -26,23 +26,25 @@ class TweetCell: UITableViewCell {
     @IBOutlet var favoriteButton: UIButton!
     @IBOutlet var retweetButton: UIButton!
     
-    
     var imageString: String = ""
     var tweet: Tweet! {
         didSet {
-            tweetTextLabel.text = tweet.text
-            tweetTimeLabel.setText(" · " + tweet.createdAtString)
-            
+            // User objects on the view
             userTitleLabel.setText(tweet.user.name)
+            userTitleLabel.font = UIFont.boldSystemFont(ofSize: 17)
             userNameLabel.setText("@" + tweet.user.screenName!)
-
-            favoritesCountLabel.text = String(describing: tweet.favoriteCount)
-            
-            retweetsCountLabel.text = String(describing: tweet.retweetCount)
-            
+            userNameLabel.textColor = .gray
             imageString = tweet.user.profileImageUrl!
             let imageURL = URL(string: self.imageString)!
             userIconImageView.af_setImage(withURL: imageURL)
+            
+            // Tweet objects on the view
+            tweetTextLabel.text = tweet.text
+            favoritesCountLabel.text = String(describing: tweet.favoriteCount)
+            retweetsCountLabel.text = String(describing: tweet.retweetCount)
+            tweetTimeLabel.setText("• " + tweet.timeAgoSinceNow)
+            tweetTimeLabel.textColor = .gray
+
         }
     }
     
@@ -77,27 +79,41 @@ class TweetCell: UITableViewCell {
         }
     }
     
+    func unfavoriteTweet() {
+        APIManager.shared.unfavorite(tweet) { (tweet: Tweet?, error: Error?) in
+            if let error = error {
+                print("Error unfavoriting tweet: \(error.localizedDescription)")
+            } else if let tweet = tweet {
+                print("Successfully unfavorited the following Tweet: \n\(tweet.text)")
+                tweet.favorited = false
+                tweet.favoriteCount! -= 1
+                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon"), for: .normal)
+            }
+        }
+    }
+    
+    //MARK: Fix the image and change favoriteButton to retweetButton
     func retweetTweet() {
         APIManager.shared.retweet(tweet) { (tweet: Tweet?, error: Error?) in
             if let  error = error {
                 print("Error retweeting tweet: \(error.localizedDescription)")
             } else if let tweet = tweet {
                 print("Successfully favorited the following Tweet: \n\(tweet.text)")
-                tweet.favoriteCount! += 1
-                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon-red"), for: .normal)
+                tweet.retweetCount += 1
+                self.retweetButton.setImage(#imageLiteral(resourceName: "retweet-icon-green"), for: .normal)
             }
         }
     }
     
-    func unfavoriteTweet() {
-        APIManager.shared.unfavorite(tweet) { (tweet: Tweet?, error: Error?) in
+    func unretweetTweet() {
+        APIManager.shared.unretweet(tweet) { (tweet: Tweet?, error: Error?) in
             if let error = error {
-                print("Error favoriting tweet: \(error.localizedDescription)")
+                print("Error untweeting tweet: \(error.localizedDescription)")
             } else if let tweet = tweet {
-                print("Successfully unfavorited the following Tweet: \n\(tweet.text)")
-                tweet.favorited = false
-                tweet.favoriteCount! -= 1
-                self.favoriteButton.setImage(#imageLiteral(resourceName: "favor-icon"), for: .normal)
+                print("Successfully unretweeted the following Tweet: \n\(tweet.text)")
+                tweet.retweeted = false
+                tweet.retweetCount -= 1
+                self.retweetButton.setImage(#imageLiteral(resourceName: "retweet-icon"), for: .normal)
             }
         }
     }

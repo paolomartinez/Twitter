@@ -7,21 +7,26 @@
 //
 
 import Foundation
+import DateToolsSwift
 
 class Tweet {
     
-    // MARK: Properties
+    // MARK: Tweet Properties
     var id: Int64 // For favoriting, retweeting & replying
     var text: String // Text content of tweet
     var favoriteCount: Int? // Update favorite count label
     var favorited: Bool? // Configure favorite button
     var retweetCount: Int // Update favorite count label
     var retweeted: Bool // Configure retweet button
-    var user: User // Contains name, screenname, etc. of tweet author
+    
     var createdAtString: String // Display date
+    var timeAgoSinceNow: String // Display when tweet was created
+    
+    var user: User // Contains name, screenname, etc. of tweet author
     
     // MARK: - Create initializer with dictionary
     init(dictionary: [String: Any]) {
+        //Home Tweets Initialization
         id = dictionary["id"] as! Int64
         text = dictionary["text"] as! String
         favoriteCount = dictionary["favorite_count"] as? Int
@@ -29,9 +34,11 @@ class Tweet {
         retweetCount = dictionary["retweet_count"] as! Int
         retweeted = dictionary["retweeted"] as! Bool
         
+        //User Object Initialization
         let user = dictionary["user"] as! [String: Any]
         self.user = User(dictionary: user)
         
+        //Date initialization
         let createdAtOriginalString = dictionary["created_at"] as! String
         let formatter = DateFormatter()
         // Configure the input format to parse the date string
@@ -42,8 +49,8 @@ class Tweet {
         formatter.dateStyle = .short
         formatter.timeStyle = .none
         // Convert Date to String
-        createdAtString = formatter.string(from: date)
-        
+        timeAgoSinceNow = date.shortTimeAgoSinceNow
+        createdAtString = date.format(with: "M/d/yy, HH:mm a")
         
     }
 }
