@@ -50,6 +50,23 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         self.refreshControl.endRefreshing()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "detailSegue" {
+            let cell = sender as! UITableViewCell
+            if let indexPath = tableView.indexPath(for: cell) {
+                let tweet = tweets[indexPath.row]
+                let vc = segue.destination as! TweetDetailViewController
+                vc.tweet = tweet
+            }
+        }
+            /*
+        else if segue.identifier == "ComposeTweetSegue" {
+            let vc = segue.destination as! ComposeTweetViewController
+            vc.delegate = self
+        }
+ */
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tweets.count
     }

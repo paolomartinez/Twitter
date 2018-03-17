@@ -11,7 +11,19 @@ import Foundation
 class User {
     
     var dictionary: [String: Any]? // For user persistance
-    
+    var name: String
+    var screenName: String
+    var followersCount: Int
+    var followingCount: Int
+    var tweetsCount: Int
+    /*
+    var profilePictureString: String //String of the profile picture
+    var profilePictureURL: URL // URL conversion from string above of the profile picture of tweet
+    */
+    var profileImageUrl: String?
+    var profileBackgroundString: String? // String of profile background image
+    var profileBackgroundURL: URL? // URL conversion from profileBackroundURL
+ 
     private static var _current: User?
     
     static var current: User? {
@@ -37,17 +49,18 @@ class User {
         }
     }
     
-    
-    var name: String
-    var screenName: String?
-    var profileImageUrl: String?
-    var timeStamp: String
-    
     init(dictionary: [String: Any]) {
         self.dictionary = dictionary
         name = dictionary["name"] as! String
-        screenName = (dictionary["screen_name"] as? String)!
-        timeStamp = dictionary["created_at"] as! String
+        screenName = dictionary["screen_name"] as! String
+        
         profileImageUrl = dictionary["profile_image_url_https"] as? String
+        /*
+        profilePictureString = dictionary["profile_image_url"] as! String
+        profilePictureURL = URL(string: profilePictureString)!
+        */
+        followersCount = dictionary["followers_count"] as! Int
+        followingCount = dictionary["friends_count"] as! Int
+        tweetsCount = dictionary["statuses_count"] as! Int
     }
 }
