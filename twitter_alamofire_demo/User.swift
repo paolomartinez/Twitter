@@ -16,10 +16,10 @@ class User {
     var followersCount: Int
     var followingCount: Int
     var tweetsCount: Int
-    /*
+    
     var profilePictureString: String //String of the profile picture
     var profilePictureURL: URL // URL conversion from string above of the profile picture of tweet
-    */
+    
     var profileImageUrl: String?
     var profileBackgroundString: String? // String of profile background image
     var profileBackgroundURL: URL? // URL conversion from profileBackroundURL
@@ -55,10 +55,10 @@ class User {
         screenName = dictionary["screen_name"] as! String
         
         profileImageUrl = dictionary["profile_image_url_https"] as? String
-        /*
+        
         profilePictureString = dictionary["profile_image_url"] as! String
         profilePictureURL = URL(string: profilePictureString)!
-        */
+        
         followersCount = dictionary["followers_count"] as! Int
         followingCount = dictionary["friends_count"] as! Int
         tweetsCount = dictionary["statuses_count"] as! Int

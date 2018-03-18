@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Load and show the login view controller
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             //let homeTimelineViewController = storyboard.instantiateViewController(withIdentifier: "TimelineViewController")
-            let homeTimelineViewController = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
+            let homeTimelineViewController = storyboard.instantiateViewController(withIdentifier: "TabBarController")
             window?.rootViewController = homeTimelineViewController
         } else {
             NotificationCenter.default.addObserver(forName: Notification.Name("didLogout"), object: nil, queue: OperationQueue.main) { (Notification) in

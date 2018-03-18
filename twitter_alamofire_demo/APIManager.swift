@@ -177,15 +177,18 @@ class APIManager: SessionManager {
         }
     }
     
-    // MARK: TODO: Favorite a Tweet
-    
-    // MARK: TODO: Un-Favorite a Tweet
-    
-    // MARK: TODO: Retweet
-    
-    // MARK: TODO: Un-Retweet
-    
     // MARK: TODO: Compose Tweet
+    func composeTweet(with text: String, completion: @escaping (Tweet?, Error?) -> ()) {
+        let urlString = "https://api.twitter.com/1.1/statuses/update.json"
+        let parameters = ["status": text]
+        oauthManager.client.post(urlString, parameters: parameters, headers: nil, body: nil, success: { (response: OAuthSwiftResponse) in
+            let tweetDictionary = try! response.jsonObject() as! [String: Any]
+            let tweet = Tweet(dictionary: tweetDictionary)
+            completion(tweet, nil)
+        }) { (error: OAuthSwiftError) in
+            completion(nil, error.underlyingError)
+        }
+    }
     
     // MARK: TODO: Get User Timeline
     
